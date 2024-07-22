@@ -8,7 +8,7 @@ import { Sidebar } from "./sidebar";
 import { Toolbar } from "./toolbar";
 import { Footer } from "./footer";
 
-interface EditorProps {}
+
 
 const Editor = () => {
   const { init } = useEditor();

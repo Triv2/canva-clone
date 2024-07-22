@@ -52,6 +52,7 @@ export const useEditor = () => {
 
       setCanvas(initialCanvas);
       setContainer(initialContainer);
+      
 
       const test = new fabric.Rect({
         height:100,
