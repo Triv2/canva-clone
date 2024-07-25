@@ -1,5 +1,4 @@
 import { fabric } from "fabric";
-import { headers } from "next/headers";
 
 export type ActiveTool =
   | "select"
@@ -66,13 +65,26 @@ export const DIAMOND_OPTIONS = {
 
 export type BuildEditorProps = {
   canvas: fabric.Canvas;
+  fillColor: string;
+  strokeColor: string;
+  strokeWidth: number;
+  setFillColor: (value: string) => void;
+  setStrokeColor: (value: string) => void;
+  setStrokeWidth: (value: number) => void;
 };
 
 export interface Editor {
+  changeStrokeWidth: (value: number) => void;
+  changeFillColor: (value: string) => void;
+  changeStrokeColor: (value: string) => void;
   addCircle: () => void;
   addSoftRectangle: () => void;
   addRectangle: () => void;
   addTriangle: () => void;
   addInverseTriangle: () => void;
   addDiamond: () => void;
+  fillColor: string;
+  strokeColor: string;
+  strokeWidth: number;
+  canvas:fabric.Canvas;
 };
