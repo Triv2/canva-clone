@@ -12,6 +12,7 @@ import {
   STROKE_COLOR,
   STROKE_DASH_ARRAY,
   STROKE_WIDTH,
+  TEXT_OPTIONS,
   TRIANGLE_OPTIONS,
 } from "../types";
 import { useCanvasEvents } from "./use-canvas-events";
@@ -51,6 +52,14 @@ const buildEditor = ({
   };
 
   return {
+    addText: ( value, options) => {
+      const object = new fabric.Textbox(value, {
+        ...TEXT_OPTIONS,
+        fill: fillColor,
+        ...options,
+      });
+      addToCanvas(object);
+    },
     getActiveOpacity: () => {
       const selectedObject = selectedObjects[0];
       
@@ -62,14 +71,12 @@ const buildEditor = ({
 
       return value;
     },
-
     changeOpacity: (value: number) => {
       canvas.getActiveObjects().forEach((object) => {
         object.set({ opacity: value });
       });
       canvas.renderAll();
     },
-
     bringForward: () => {
       canvas.getActiveObjects().forEach((object) => {
         canvas.bringForward(object);
@@ -94,7 +101,6 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
-
     changeStrokeColor: (value:string)=> {
       setStrokeColor(value);
       canvas.getActiveObjects().forEach((object) => {
@@ -108,7 +114,6 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
-
     changeStrokeWidth: (value:number)=> {
       setStrokeWidth(value);
       canvas.getActiveObjects().forEach((object) => {
@@ -116,7 +121,6 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
-
     changeStrokeDashArray: (value:number[])=> {
       setStrokeDashArray(value);
       canvas.getActiveObjects().forEach((object) => {
@@ -124,7 +128,6 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
-
     addCircle: () => {
       const object = new fabric.Circle({
         ...CIRCLE_OPTIONS,
