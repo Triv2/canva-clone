@@ -3,7 +3,7 @@ import { ActiveTool, Editor, FONT_SIZE, FONT_WEIGHT } from "../types";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { AlignCenter, AlignLeft, AlignRight, ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, ArrowDown, ArrowUp, ChevronDown, Delete, Trash } from "lucide-react";
 import { BsBorderWidth } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
 import { isTextType } from "../utils";
@@ -341,6 +341,17 @@ export const Toolbar = ({
             className={cn(activeTool === "opacity" && "bg-gray-100")}
           >
             <RxTransparencyGrid className="size-4" />
+          </Button>
+        </Hint>
+      </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Delete" side="bottom" sideOffset={5}>
+          <Button
+            onClick={() => editor?.delete()}
+            size="icon"
+            variant="ghost"
+          >
+            <Trash className="size-4" />
           </Button>
         </Hint>
       </div>
