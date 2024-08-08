@@ -3,12 +3,22 @@ import { ActiveTool, Editor, FONT_SIZE, FONT_WEIGHT } from "../types";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { AlignCenter, AlignLeft, AlignRight, ArrowDown, ArrowUp, ChevronDown, Delete, Trash } from "lucide-react";
+import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  ArrowDown,
+  ArrowUp,
+  ChevronDown,
+  Delete,
+  Trash,
+} from "lucide-react";
 import { BsBorderWidth } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
 import { isTextType } from "../utils";
 import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
 import { FontSizeInput } from "./font-size-input";
+import {TbColorFilter} from "react-icons/tb";
 
 interface ToolbarProps {
   editor: Editor | undefined;
@@ -45,18 +55,19 @@ export const Toolbar = ({
 
   const selectedObjectType = editor?.selectedObjects[0]?.type;
   const isText = isTextType(selectedObjectType);
+  const isImage = selectedObjectType === "image";
   const selectedObject = editor?.selectedObjects[0];
 
-  const onChangeFontSize = (value:number) => {
+  const onChangeFontSize = (value: number) => {
     if (!selectedObject) {
       return;
     }
     editor?.changeFontSize(value);
     setProperties((current) => ({
       ...current,
-       fontSize: value,
-     }));
-  }
+      fontSize: value,
+    }));
+  };
 
   const onChangeTextAlign = (value: string) => {
     if (!selectedObject) {
@@ -65,7 +76,7 @@ export const Toolbar = ({
 
     editor?.changeTextAlign(value);
     setProperties((current) => ({
-     ...current,
+      ...current,
       textAlign: value,
     }));
   };
@@ -102,7 +113,7 @@ export const Toolbar = ({
     if (!selectedObject) {
       return;
     }
-    
+
     const newValue = properties.fontLinethrough ? false : true;
 
     editor?.changeFontLinethrough(newValue);
@@ -116,7 +127,7 @@ export const Toolbar = ({
     if (!selectedObject) {
       return;
     }
-    
+
     const newValue = properties.fontUnderline ? false : true;
 
     editor?.changeFontUnderline(newValue);
@@ -134,23 +145,25 @@ export const Toolbar = ({
 
   return (
     <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2">
-      <div className="flex items-center h-full justify-center">
-        <Hint label="Color" side="bottom" sideOffset={5}>
-          <Button
-            onClick={() => onChangeActiveTool("fill")}
-            size="icon"
-            variant="ghost"
-            className={cn(activeTool === "fill" && "bg-gray-100")}
-          >
-            <div
-              className="rounded-sm size-4 border"
-              style={{
-                backgroundColor: properties.fillColor,
-              }}
-            />
-          </Button>
-        </Hint>
-      </div>
+      {!isImage && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Color" side="bottom" sideOffset={5}>
+            <Button
+              onClick={() => onChangeActiveTool("fill")}
+              size="icon"
+              variant="ghost"
+              className={cn(activeTool === "fill" && "bg-gray-100")}
+            >
+              <div
+                className="rounded-sm size-4 border"
+                style={{
+                  backgroundColor: properties.fillColor,
+                }}
+              />
+            </Button>
+          </Hint>
+        </div>
+      )}
       {!isText && (
         <div className="flex items-center h-full justify-center">
           <Hint label="Stroke Color" side="bottom" sideOffset={5}>
@@ -264,7 +277,7 @@ export const Toolbar = ({
         <div className="flex items-center h-full justify-center">
           <Hint label="Align Left" side="bottom" sideOffset={5}>
             <Button
-              onClick={()=> onChangeTextAlign("left")}
+              onClick={() => onChangeTextAlign("left")}
               size="icon"
               variant="ghost"
               className={cn(properties.textAlign === "left" && "bg-gray-100")}
@@ -278,7 +291,7 @@ export const Toolbar = ({
         <div className="flex items-center h-full justify-center">
           <Hint label="Align Center" side="bottom" sideOffset={5}>
             <Button
-              onClick={()=> onChangeTextAlign("center")}
+              onClick={() => onChangeTextAlign("center")}
               size="icon"
               variant="ghost"
               className={cn(properties.textAlign === "center" && "bg-gray-100")}
@@ -292,7 +305,7 @@ export const Toolbar = ({
         <div className="flex items-center h-full justify-center">
           <Hint label="Align Right" side="bottom" sideOffset={5}>
             <Button
-              onClick={()=> onChangeTextAlign("right")}
+              onClick={() => onChangeTextAlign("right")}
               size="icon"
               variant="ghost"
               className={cn(properties.textAlign === "right" && "bg-gray-100")}
@@ -308,6 +321,20 @@ export const Toolbar = ({
             value={properties.fontSize}
             onChange={onChangeFontSize}
           />
+        </div>
+      )}
+      {isImage && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Filters" side="bottom" sideOffset={5}>
+            <Button
+              onClick={() => onChangeActiveTool("filter")}
+              size="icon"
+              variant="ghost"
+              className={cn(activeTool === "filter" && "bg-gray-100")}
+            >
+              <TbColorFilter className="size-4" />
+            </Button>
+          </Hint>
         </div>
       )}
       <div className="flex items-center h-full justify-center">
@@ -346,11 +373,7 @@ export const Toolbar = ({
       </div>
       <div className="flex items-center h-full justify-center">
         <Hint label="Delete" side="bottom" sideOffset={5}>
-          <Button
-            onClick={() => editor?.delete()}
-            size="icon"
-            variant="ghost"
-          >
+          <Button onClick={() => editor?.delete()} size="icon" variant="ghost">
             <Trash className="size-4" />
           </Button>
         </Hint>
