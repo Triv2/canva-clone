@@ -58,6 +58,7 @@ const buildEditor = ({
   };
 
   return {
+
     changeImageFilter: (value: string) => {
       const objects = canvas.getActiveObjects();
       objects.forEach((object) => {

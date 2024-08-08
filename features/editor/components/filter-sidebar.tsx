@@ -21,6 +21,8 @@ export const FilterSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: FilterSidebarProps) => {
+
+  
   const onClose = () => {
     onChangeActiveTool("select");
   };
