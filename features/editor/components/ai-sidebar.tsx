@@ -25,7 +25,6 @@ export const AiSidebar = ({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("This is the prompt:", value);
     mutation.mutate(
       { prompt: value },
       {

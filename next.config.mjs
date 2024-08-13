@@ -8,7 +8,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'uts.io',
+        hostname: 'utfs.io',
       },
       {
         protocol: 'https',
