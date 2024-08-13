@@ -10,6 +10,7 @@ import {
   ArrowDown,
   ArrowUp,
   ChevronDown,
+  Copy,
   Delete,
   SquareSplitHorizontal,
   Trash,
@@ -19,7 +20,7 @@ import { RxTransparencyGrid } from "react-icons/rx";
 import { isTextType } from "../utils";
 import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
 import { FontSizeInput } from "./font-size-input";
-import {TbColorFilter} from "react-icons/tb";
+import { TbColorFilter } from "react-icons/tb";
 
 interface ToolbarProps {
   editor: Editor | undefined;
@@ -383,6 +384,20 @@ export const Toolbar = ({
             className={cn(activeTool === "opacity" && "bg-gray-100")}
           >
             <RxTransparencyGrid className="size-4" />
+          </Button>
+        </Hint>
+      </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Duplicate" side="bottom" sideOffset={5}>
+          <Button
+            onClick={() => {
+              editor?.onCopy();
+              editor?.onPaste();
+            }}
+            size="icon"
+            variant="ghost"
+          >
+            <Copy className="size-4" />
           </Button>
         </Hint>
       </div>
