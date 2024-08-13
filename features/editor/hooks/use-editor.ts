@@ -1,4 +1,3 @@
-
 import { useCallback, useState, useMemo } from "react";
 import { fabric } from "fabric";
 import { useAutoResize } from "./use-auto-resize";
@@ -61,16 +60,35 @@ const buildEditor = ({
   };
 
   return {
+    autoZoom,
     getWorkspace,
-    changeSize: (value:{width:number; height:number}) => {
+    zoomIn: () => {
+      let zoomRatio = canvas.getZoom();
+      zoomRatio += 0.05;
+      const center = canvas.getCenter();
+      canvas.zoomToPoint(
+        new fabric.Point(center.left, center.top),
+        zoomRatio > 1 ? 1 : zoomRatio,
+      );
+    },
+    zoomOut: () => {
+      let zoomRatio = canvas.getZoom();
+      zoomRatio -= 0.05;
+      const center = canvas.getCenter();
+      canvas.zoomToPoint(
+        new fabric.Point(center.left, center.top),
+        zoomRatio < 0.2 ? 0.2 : zoomRatio,
+      );
+    },
+    changeSize: (value: { width: number; height: number }) => {
       const workspace = getWorkspace();
 
       workspace?.set(value);
       autoZoom();
     },
-    changeBackground: ( value:string) => {
+    changeBackground: (value: string) => {
       const workspace = getWorkspace();
-      workspace?.set({fill: value});
+      workspace?.set({ fill: value });
       canvas.renderAll();
     },
     enableDrawingMode: () => {
@@ -79,7 +97,6 @@ const buildEditor = ({
       canvas.isDrawingMode = true;
       canvas.freeDrawingBrush.width = strokeWidth;
       canvas.freeDrawingBrush.color = strokeColor;
-     
     },
     disableDrawingMode: () => {
       canvas.isDrawingMode = false;
@@ -503,7 +520,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 
   const { copy, paste } = useClipboard({ canvas });
 
-  const {autoZoom} = useAutoResize({
+  const { autoZoom } = useAutoResize({
     canvas,
     container,
   });
