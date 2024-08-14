@@ -20,16 +20,17 @@ import { CiFileOn } from "react-icons/ci";
 import { Separator } from "@/components/ui/separator";
 import { Hint } from "@/components/hint";
 import { BsCloudCheck } from "react-icons/bs";
-import { ActiveTool } from "../types";
+import { ActiveTool, Editor } from "../types";
 import { cn } from "@/lib/utils";
 
-
 interface NavbarProps {
+  editor: Editor | undefined;
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
 }
 
 export const Navbar = ({
+  editor,
   activeTool,
   onChangeActiveTool,
 }: NavbarProps) => {
@@ -61,19 +62,32 @@ export const Navbar = ({
         </DropdownMenu>
         <Separator orientation="vertical" className="mx-2" />
         <Hint label="Select" side="bottom" sideOffset={10}>
-          <Button variant="ghost" size="icon" 
-          onClick={() => onChangeActiveTool("select")} 
-          className={cn(activeTool === "select" && "bg-gray-100")}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onChangeActiveTool("select")}
+            className={cn(activeTool === "select" && "bg-gray-100")}
+          >
             <MousePointerClick className="size-4" />
           </Button>
         </Hint>
         <Hint label="Undo" side="bottom" sideOffset={10}>
-          <Button variant="ghost" size="icon" onClick={() => {}} className="">
+          <Button
+            disabled={!editor?.canUndo()}
+            variant="ghost"
+            size="icon"
+            onClick={() => editor?.onUndo()}
+          >
             <Undo2 className="size-4" />
           </Button>
         </Hint>
         <Hint label="Redo" side="bottom" sideOffset={10}>
-          <Button variant="ghost" size="icon" onClick={() => {}} className="">
+          <Button
+            disabled={!editor?.canRedo()}
+            variant="ghost"
+            size="icon"
+            onClick={() => editor?.onRedo()}
+          >
             <Redo2 className="size-4" />
           </Button>
         </Hint>
