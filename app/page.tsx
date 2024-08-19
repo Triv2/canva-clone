@@ -1,11 +1,13 @@
-import { auth } from "@/auth";
+
+import { protectServer } from "@/features/auth/utils";
 
 
 export default async function Home() {
-  const session = await auth();
+  await protectServer();
+
   return (
     <div>
-      {session?.user?.name}
+      Logged In
     </div>
   );
 }
