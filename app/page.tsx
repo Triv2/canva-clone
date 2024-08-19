@@ -5,7 +5,7 @@ export default async function Home() {
   const session = await auth();
   return (
     <div>
-      Hello World
+      {session?.user?.name}
     </div>
   );
 }
