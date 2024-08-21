@@ -6,6 +6,7 @@ import authConfig from "@/auth.config";
 import images from "./images";
 import ai from "./ai";
 import users from "./users";
+import projects from "./projects";
 
 // Revert to edge if planning on running on the edge
 export const runtime = "nodejs";
@@ -24,7 +25,8 @@ app.use("*", initAuthConfig(getAuthConfig));
 const routes = app
   .route("/ai", ai)
   .route("/users", users)
-  .route("/images", images);
+  .route("/images", images)
+  .route("/projects", projects);
 
 export const GET = handle(app);
 export const POST = handle(app);
