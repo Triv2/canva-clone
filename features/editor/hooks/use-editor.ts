@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo, useRef } from "react";
 import { fabric } from "fabric";
 import { useAutoResize } from "./use-auto-resize";
 import {
@@ -20,11 +20,17 @@ import {
   TRIANGLE_OPTIONS,
 } from "../types";
 import { useCanvasEvents } from "./use-canvas-events";
-import { createFilter, downloadFile, isTextType, transformText } from "../utils";
+import {
+  createFilter,
+  downloadFile,
+  isTextType,
+  transformText,
+} from "../utils";
 import { useClipboard } from "./use-clipboard";
 import { useHistory } from "./use-history";
 import { useHotkeys } from "./use-hotkeys";
 import { useWindowEvents } from "./use-window-events";
+import { useLoadState } from "./use-load-state";
 
 const buildEditor = ({
   save,
@@ -48,7 +54,6 @@ const buildEditor = ({
   strokeDashArray,
   setStrokeDashArray,
 }: BuildEditorProps): Editor => {
-
   const generateSaveOptions = () => {
     const { width, height, left, top } = getWorkspace() as fabric.Rect;
 
@@ -65,41 +70,41 @@ const buildEditor = ({
 
   const savePng = () => {
     const options = generateSaveOptions();
-    canvas.setViewportTransform([1,0,0,1,0,0]);
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     const dataUrl = canvas.toDataURL(options);
 
-    downloadFile(dataUrl,"png");
+    downloadFile(dataUrl, "png");
     autoZoom();
   };
 
   const saveSvg = () => {
     const options = generateSaveOptions();
-    canvas.setViewportTransform([1,0,0,1,0,0]);
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     const dataUrl = canvas.toDataURL(options);
 
-    downloadFile(dataUrl,"svg");
+    downloadFile(dataUrl, "svg");
     autoZoom();
   };
 
   const saveJpg = () => {
     const options = generateSaveOptions();
-    canvas.setViewportTransform([1,0,0,1,0,0]);
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     const dataUrl = canvas.toDataURL(options);
 
-    downloadFile(dataUrl,"jpg");
+    downloadFile(dataUrl, "jpg");
     autoZoom();
   };
-  
+
   const saveJson = async () => {
     const dataUrl = canvas.toJSON(JSON_KEYS);
     await transformText(dataUrl.objects);
-    const fileString =`data:text/json;charset=utf-8,${encodeURIComponent(
-      JSON.stringify(dataUrl, null, "\t"),
+    const fileString = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(dataUrl, null, "\t")
     )}`;
-    downloadFile(fileString,"json");
+    downloadFile(fileString, "json");
   };
 
-  const loadJson = (json:string) => {
+  const loadJson = (json: string) => {
     const data = JSON.parse(json);
 
     canvas.loadFromJSON(data, () => {
@@ -585,7 +590,17 @@ const buildEditor = ({
   };
 };
 
-export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
+export const useEditor = ({
+  clearSelectionCallback,
+  saveCallback,
+  defaultHeight,
+  defaultWidth,
+  defaultState,
+}: EditorHookProps) => {
+  const initialState= useRef(defaultState);
+  const initialWidth= useRef(defaultWidth);
+  const initialHeight= useRef(defaultHeight);
+
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
@@ -599,7 +614,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 
   useWindowEvents();
 
-  const { save, canRedo, canUndo, undo, redo, canvasHistory, setHistoryIndex } = useHistory({ canvas });
+  const { save, canRedo, canUndo, undo, redo, canvasHistory, setHistoryIndex } =
+    useHistory({ canvas, saveCallback });
 
   const { copy, paste } = useClipboard({ canvas });
 
@@ -622,6 +638,14 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     copy,
     paste,
     canvas,
+  });
+
+  useLoadState({
+    canvas,
+    autoZoom,
+    initialState,
+    canvasHistory,
+    setHistoryIndex,
   });
 
   const editor = useMemo(() => {
@@ -688,8 +712,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
       });
       // Set the initial canvas dimensions
       const initialWorkspace = new fabric.Rect({
-        width: 900,
-        height: 1200,
+        width: initialWidth.current,
+        height: initialHeight.current,
         name: "clip",
         fill: "white",
         selectable: false,
