@@ -7,6 +7,7 @@ import images from "./images";
 import ai from "./ai";
 import users from "./users";
 import projects from "./projects";
+import subscriptions from "./subscriptions";
 
 // Revert to edge if planning on running on the edge
 export const runtime = "nodejs";
@@ -26,7 +27,8 @@ const routes = app
   .route("/ai", ai)
   .route("/users", users)
   .route("/images", images)
-  .route("/projects", projects);
+  .route("/projects", projects)
+  .route("/subscriptions", subscriptions);
 
 export const GET = handle(app);
 export const POST = handle(app);

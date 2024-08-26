@@ -22,6 +22,13 @@
       "when": 1724253020326,
       "tag": "0002_smart_wild_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1724689937375,
+      "tag": "0003_foamy_plazm",
+      "breakpoints": true
     }
   ]
 }
